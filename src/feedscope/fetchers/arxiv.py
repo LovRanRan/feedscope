@@ -10,6 +10,8 @@ ARXIV_API = "http://export.arxiv.org/api/query"
 
 
 class ArxivFetcher(BaseFetcher):
+    source = "arxiv"
+
     async def fetch(self, query: str, limit: int) -> FetchResult:
         try:
             params: dict[str, str | int] = {"search_query": f"all:{query}", "max_results": limit}
@@ -30,16 +32,16 @@ class ArxivFetcher(BaseFetcher):
                 article = Article(
                     title=title,
                     url=url,
-                    source="arxiv",
+                    source=self.source,
                     published_at=published,
                     authors=authors,
                     summary=summary,
                 )
                 articles.append(article)
-            return FetchResult(source="arxiv", articles=articles)
+            return FetchResult(source=self.source, articles=articles)
         except httpx.HTTPStatusError as e:
-            return FetchResult(source="arxiv", error=f"HTTP {e.response.status_code}")
+            return FetchResult(source=self.source, error=f"HTTP {e.response.status_code}")
         except httpx.RequestError as e:
-            return FetchResult(source="arxiv", error=f"Request error: {e}")
+            return FetchResult(source=self.source, error=f"Request error: {e}")
         except ET.ParseError as e:
-            return FetchResult(source="arxiv", error=f"XML parse error: {e}")
+            return FetchResult(source=self.source, error=f"XML parse error: {e}")

@@ -25,6 +25,7 @@ ARXIV_EMPTY_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 </feed>"""
 
+
 @respx.mock
 async def test_arxiv_fetcher_returns_articles_on_success() -> None:
     respx.get(ARXIV_API).mock(return_value=httpx.Response(200, text=ARXIV_RESPONSE_XML))
@@ -37,6 +38,7 @@ async def test_arxiv_fetcher_returns_articles_on_success() -> None:
     assert result.articles[0].title == "Test Paper One"
     assert result.articles[0].authors == ["Alice", "Bob"]
     assert result.articles[1].title == "Test Paper Two"
+
 
 @respx.mock
 async def test_arxiv_fetcher_handles_empty_results() -> None:
@@ -59,7 +61,3 @@ async def test_arxiv_fetcher_returns_error_on_http_500() -> None:
     assert result.articles == []
     assert result.error is not None
     assert "HTTP 500" in result.error
-
-
-
-

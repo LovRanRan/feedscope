@@ -8,7 +8,10 @@ from feedscope.models import Article, FetchResult
 HN_API = "https://hn.algolia.com/api/v1/search"
 HN_THREAD_URL = "https://news.ycombinator.com/item"  # use for url null fallback
 
+
 class HNFetcher(BaseFetcher):
+    source = "hn"
+
     async def fetch(self, query: str, limit: int) -> FetchResult:
         try:
             params: dict[str, str | int] = {
@@ -28,16 +31,16 @@ class HNFetcher(BaseFetcher):
                 article = Article(
                     title=hit["title"].strip(),
                     url=hit_url,
-                    source="hn",
+                    source=self.source,
                     published_at=hit["created_at_i"],
                     authors=[hit["author"]],
                     summary="",
                 )
                 articles.append(article)
-            return FetchResult(source="hn", articles=articles)
+            return FetchResult(source=self.source, articles=articles)
         except httpx.HTTPStatusError as e:
-            return FetchResult(source="hn", error=f"HTTP {e.response.status_code}")
+            return FetchResult(source=self.source, error=f"HTTP {e.response.status_code}")
         except httpx.RequestError as e:
-            return FetchResult(source="hn", error=f"Request error: {e}")
+            return FetchResult(source=self.source, error=f"Request error: {e}")
         except json.JSONDecodeError as e:
-            return FetchResult(source="hn", error=f"JSON parse error: {e}")
+            return FetchResult(source=self.source, error=f"JSON parse error: {e}")

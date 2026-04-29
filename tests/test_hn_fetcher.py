@@ -5,7 +5,7 @@ import respx
 
 from feedscope.fetchers.hn import HN_API, HNFetcher
 
-HN_RESPONSE_JSON :dict[str, Any]= {
+HN_RESPONSE_JSON: dict[str, Any] = {
     "hits": [
         {
             "title": "First Post",
@@ -32,6 +32,7 @@ HN_RESPONSE_JSON :dict[str, Any]= {
 }
 HN_EMPTY_JSON: dict[str, Any] = {"hits": []}
 
+
 @respx.mock
 async def test_hn_fetcher_returns_articles_on_success() -> None:
     respx.get(HN_API).mock(return_value=httpx.Response(200, json=HN_RESPONSE_JSON))
@@ -44,6 +45,7 @@ async def test_hn_fetcher_returns_articles_on_success() -> None:
     assert result.articles[0].authors == ["alice"]
     assert len(result.articles) == 3
 
+
 @respx.mock
 async def test_hn_fetcher_handles_empty_results() -> None:
     respx.get(HN_API).mock(return_value=httpx.Response(200, json=HN_EMPTY_JSON))
@@ -53,6 +55,7 @@ async def test_hn_fetcher_handles_empty_results() -> None:
     assert result.source == "hn"
     assert result.articles == []
     assert result.error is None
+
 
 @respx.mock
 async def test_hn_fetcher_returns_error_on_http_500() -> None:

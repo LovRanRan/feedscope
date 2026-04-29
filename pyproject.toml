@@ -49,8 +49,10 @@ ignore = []
 [tool.mypy]
 strict = true
 python_version = "3.14"
+mypy_path = ["src"] 
 files = ["src/feedscope", "tests"]
 warn_unused_configs = true
+plugins = ["pydantic.mypy"] 
 
 [[tool.mypy.overrides]]
 module = ["respx.*"]
@@ -59,4 +61,5 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+pythonpath = ["src"]
 addopts = "-v --strict-markers"

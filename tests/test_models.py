@@ -33,5 +33,5 @@ def test_article_parses_unix_timestamp() -> None:
 
 def test_fetch_config_reads_env_var(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("FEEDSCOPE_QUERY", "ai")
-    config = FetchConfig() # type: ignore
+    config = FetchConfig()
     assert config.query == "ai"
